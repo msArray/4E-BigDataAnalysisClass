@@ -1,0 +1,4 @@
+/scraped_*
+/.venv
+*.csv
+*.zip
