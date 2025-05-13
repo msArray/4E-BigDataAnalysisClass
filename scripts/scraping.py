@@ -78,7 +78,7 @@ def download_and_process_urls(url_list):
                     resolved_items.append([name, price, category, is_resell])
                     print([name, price, category, is_resell])
                 
-                data[week - 1] = resolved_items
+                data[week - 2] = resolved_items
             
             # 2017年 6月以前対応レイアウト
             # weekly_data: list[BeautifulSoup] = soup.find_all("div", class_="week")
@@ -139,7 +139,7 @@ def save_documents_as_text_file(documents, output_file):
 def main():
     
     # CSVファイルとURLのある列を指定
-    url_list = create_url_list('./URL_list_after.csv', 0) 
+    url_list = create_url_list('./URL_list_plus.csv', 0) 
 
     # 各URLからHTMLをダウンロードしてテキストに変換
     download_and_process_urls(url_list)

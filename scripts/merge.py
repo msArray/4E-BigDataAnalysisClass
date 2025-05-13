@@ -25,6 +25,8 @@ for i in range(14,26):
         
 
 only_gacha_df = merged_df.query('category == "ガシャポン"')
+without_other_df = merged_df.query('category != "その他"')
 
 merged_df.to_csv("./merged.csv", index=False, encoding="utf-8-sig")
 only_gacha_df.to_csv("./only_gacha.csv", index=False, encoding="utf-8-sig")
+without_other_df.to_csv("./without_other.csv", index=False, encoding="utf-8-sig")

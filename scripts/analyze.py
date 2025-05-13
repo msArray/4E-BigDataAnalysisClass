@@ -9,7 +9,7 @@ from scipy.stats import linregress
 plt.rcParams['font.family'] = 'MS Gothic'  # 日本語フォント
 
 # CSVファイルを読み込む
-df = pd.read_csv('./only_gacha.csv', encoding="utf-8")
+df = pd.read_csv('./without_other.csv', encoding="utf-8")
 
 # price列を数値に変換（無効なデータはNaNに変換）
 df['price'] = pd.to_numeric(df['price'], errors='coerce')
@@ -60,17 +60,18 @@ regression_line = slope * df['date_int'] + intercept
 
 # プロット（点のみ）
 plt.figure(figsize=(12, 5))
-plt.scatter(df['date'], df['price'], color='green', label='値段', alpha=0.3)
+plt.scatter(df['date'], df['price'], color='green', label='値段', alpha=0.1, s=10)
 
 # 回帰直線をプロット
 plt.plot(df['date'], regression_line, color='red', label='回帰直線', linestyle='-')
+print(f"回帰直線の傾き: {slope}, 切片: {intercept}, p値: {p_value}, 決定係数: {r_value**2}")
 
 # 日付のフォーマットを設定（YYYY-MM-DD）
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y年%m月%d日'))
 
 # X軸のラベルの回転を調整
 plt.xticks(rotation=45)
-plt.xlim(df['date'].min(), df['date'].max())
+plt.xlim(datetime(2014,1,1), df['date'].max())
 plt.xlabel('日付')
 plt.ylabel('価格（円）')
 plt.title('ガシャポン価格の時系列推移と回帰直線')
