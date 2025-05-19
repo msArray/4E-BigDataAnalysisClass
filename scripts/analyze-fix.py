@@ -12,8 +12,13 @@ plt.rcParams['font.family'] = 'MS Gothic'  # 日本語フォント
 df = pd.read_csv('./without_other.csv', encoding="utf-8")
 
 # price列を数値に変換（無効なデータはNaNに変換）
+for index, row in df.iterrows():
+    if type(row["price"]) is str:
+        row['price'] = int(row["price"].replace(',', ''))
+        df.at[index, 'price'] = row['price']
+    
 df['price'] = pd.to_numeric(df['price'], errors='coerce')
-
+print(df["price"].max())
 # 日付変換関数
 def get_week_start_date(row):
     try:
@@ -64,7 +69,7 @@ regression_line = slope * df['days_from_base'] + intercept
 
 # プロット（点のみ）
 plt.figure(figsize=(12, 5))
-plt.scatter(df['days_from_base'], df['price'], color='green', label='値段', alpha=0.1, s=10)
+plt.scatter(df['days_from_base'], df['price'], color='green', label='値段', alpha=0.25, s=10)
 
 # 回帰直線をプロット
 plt.plot(df['days_from_base'], regression_line, color='red', label='回帰直線', linestyle='-')
@@ -80,9 +85,11 @@ def days_to_date_label(days):
 major_ticks = np.arange(0, max(df['days_from_base']) + 180, 180)
 plt.xticks(major_ticks, [days_to_date_label(days) for days in major_ticks], rotation=45)
 
-plt.xlabel('日付（{0}からの経過）'.format(base_date.strftime('%Y年%m月%d日')))
+plt.ylim(0, 2100)
+plt.xlabel('日付')
+# plt.xlabel('日付（{0}からの経過）'.format(base_date.strftime('%Y年%m月%d日')))
 plt.ylabel('価格（円）')
-plt.title('ガシャポン価格の時系列推移と回帰直線')
+plt.title('カプセルトイ価格の時系列推移と回帰直線')
 plt.grid(True)
 plt.tight_layout()
 plt.legend()
@@ -94,7 +101,7 @@ plt.show()
 
 # 別のアプローチ：日付を表示するが、切片を強調表示する方法
 plt.figure(figsize=(12, 5))
-plt.scatter(df['date'], df['price'], color='green', label='値段', alpha=0.1, s=10)
+plt.scatter(df['date'], df['price'], color='green', label='値段', alpha=0.25, s=10)
 
 # 回帰直線をプロット
 plt.plot(df['date'], regression_line, color='red', label=f'回帰直線 (y = {slope:.6f}x + {intercept:.2f})', linestyle='-')
@@ -111,7 +118,7 @@ plt.xticks(rotation=45)
 plt.xlim(base_date - timedelta(days=30), df['date'].max() + timedelta(days=30))
 plt.xlabel('日付')
 plt.ylabel('価格（円）')
-plt.title('ガシャポン価格の時系列推移と回帰直線')
+plt.title('カプセルトイ価格の時系列推移と回帰直線')
 plt.grid(True)
 plt.tight_layout()
 plt.legend()
@@ -133,7 +140,7 @@ for bar, mean, count in zip(bars, yearly_avg['mean'], yearly_avg['count']):
 plt.ylim(0, yearly_avg['mean'].max() + 100)
 plt.xlabel('年')
 plt.ylabel('平均価格（円）')
-plt.title('ガシャポン価格の年間平均値')
+plt.title('カプセルトイ価格の年間平均値')
 plt.grid(True, axis='y')
 plt.tight_layout()
 plt.show()
